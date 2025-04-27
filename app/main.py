@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from dotenv import load_dotenv
-from app.api.v1 import chat_routes
+from api.v1 import chat_routes
 
 load_dotenv()
 
