@@ -1,26 +1,21 @@
-import requests
+import openai
 import os
 
-HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-large"
-HUGGINGFACE_API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")
-
-headers = {
-    "Authorization": f"Bearer {HUGGINGFACE_API_TOKEN}"
-}
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def generate_reply(user_message: str) -> str:
-    payload = {
-        "inputs": user_message,
-        "parameters": {"max_new_tokens": 100},
-    }
-
-    response = requests.post(HUGGINGFACE_API_URL, headers=headers, json=payload)
-
-    if response.status_code == 200:
-        prediction = response.json()
-        if isinstance(prediction, list) and "generated_text" in prediction[0]:
-            return prediction[0]["generated_text"]
-        else:
-            return "👗 Sorry, I couldn't think of an answer right now!"
-    else:
-        return "🚨 Error contacting AI service. Please try again later."
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",  # Use gpt-4 if you want premium
+            messages=[
+                {"role": "system", "content": "You are a professional fashion stylist. Give outfit recommendations based on user questions."},
+                {"role": "user", "content": user_message}
+            ],
+            max_tokens=300,
+            temperature=0.7
+        )
+        reply = response.choices[0].message["content"].strip()
+        return reply
+    except Exception as e:
+        print(f"OpenAI error: {e}")
+        return "🚨 AI service is unavailable right now."
