@@ -1,1 +1,0 @@
-# snapwear-ai-service
