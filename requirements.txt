@@ -1,5 +1,4 @@
-fastapi>=0.95.2
-uvicorn[standard]>=0.22.0
-python-dotenv>=1.0.0
-openai>=0.27.8
-pytest>=7.0.0
+fastapi
+uvicorn
+python-dotenv
+openai
