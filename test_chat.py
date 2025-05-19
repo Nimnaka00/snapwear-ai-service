@@ -2,7 +2,13 @@ import requests
 
 url = "http://localhost:8000/api/v1/chat"
 payload = {
-    "message": "What should I wear to a wedding?"
+    "messages": [
+        {"role": "system", "content": "You are a fashion assistant for Snapwear."},
+        {"role": "user", "content": "What should I wear to a wedding?"}
+    ],
+    "model": "deepseek-ai/deepseek-r1",
+    "temperature": 0.7,
+    "max_tokens": 500
 }
 
 response = requests.post(url, json=payload)
