@@ -1,24 +1,36 @@
-import openai
 import os
-from openai import OpenAI
+import httpx
+from dotenv import load_dotenv
 
-def generate_reply(user_message: str) -> str:
-    try:
-        client = OpenAI(
-            api_key=os.getenv("OPENAI_API_KEY")  # ✅ Now create inside function
-        )
+load_dotenv()
 
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a professional fashion stylist helping customers with outfit recommendations."},
-                {"role": "user", "content": user_message}
-            ],
-            max_tokens=300,
-            temperature=0.7
-        )
-        reply = response.choices[0].message.content.strip()
-        return reply
-    except Exception as e:
-        print(f"OpenAI API error: {e}")
-        return "🚨 Sorry, I couldn't generate a response right now."
+class DeepSeekChatService:
+    def __init__(self):
+        self.api_key = os.getenv("DEEPSEEK_API_KEY")
+        self.api_url = os.getenv("DEEPSEEK_API_URL")
+        self.headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+    
+    async def chat_completion(self, messages, model="deepseek-r1", temperature=0.7, max_tokens=1000):
+        payload = {
+            "model": model,
+            "messages": messages,
+            "temperature": temperature,
+            "max_tokens": max_tokens
+        }
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                self.api_url,
+                headers=self.headers,
+                json=payload,
+                timeout=30.0
+            )
+            
+            if response.status_code != 200:
+                error_msg = f"API request failed with status {response.status_code}: {response.text}"
+                raise Exception(error_msg)
+            
+            return response.json()
