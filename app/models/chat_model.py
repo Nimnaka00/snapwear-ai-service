@@ -9,7 +9,7 @@ class ChatRequest(BaseModel):
     messages: List[Message]
     model: Optional[str] = "deepseek/deepseek-r1:free"
     temperature: Optional[float] = 0.7
-    max_tokens: Optional[int] = 1000
+    max_tokens: Optional[int] = 250
 
 class ChatResponse(BaseModel):
     response: str

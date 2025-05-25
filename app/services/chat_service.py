@@ -13,7 +13,7 @@ class DeepSeekChatService:
             "Content-Type": "application/json"
         }
     
-    async def chat_completion(self, messages, model="deepseek/deepseek-r1:free", temperature=0.7, max_tokens=1000):
+    async def chat_completion(self, messages, model="deepseek/deepseek-r1:free", temperature=0.7, max_tokens=250):
         payload = {
             "model": model,
             "messages": messages,
