@@ -130,4 +130,4 @@ python test_chat.py
 ## 📬 Contact
 
 For help, questions, or collaboration:
-**SnapWear Dev Team** — `dev@snapwear.com`
+**SnapWear Dev Team** — `indujanimnaka01@gmail.com`
