@@ -14,7 +14,7 @@ payload = {
     ],
     "model": "deepseek/deepseek-r1:free",
     "temperature": 0.7,
-    "max_tokens": 400
+    "max_tokens": 250
 }
 
 response = requests.post(url, json=payload)
