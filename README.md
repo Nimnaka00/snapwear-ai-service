@@ -1,6 +1,6 @@
 # 🧠 SnapWear AI Service
 
-This is a FastAPI-based backend service for SnapWear's **AI Stylist Chatbot**. It uses OpenAI's GPT model to give smart outfit advice and fashion recommendations.
+This is a **FastAPI-based backend** powering SnapWear's **AI Stylist Chatbot**. It uses the **DeepSeek R1 model** via [OpenRouter](https://openrouter.ai) to generate outfit advice and dynamically recommend products from SnapWear's fashion catalog.
 
 ---
 
@@ -11,16 +11,16 @@ snapwear-ai-service/
 │
 ├── app/
 │   ├── api/v1/
-│   │   └── chat_routes.py         # API routes
+│   │   └── chat_routes.py         # Chat endpoint with product recommendation logic
 │   ├── models/
-│   │   └── chat_model.py          # Request/response models
+│   │   └── chat_model.py          # Pydantic models for chat request/response
 │   ├── services/
-│   │   └── chat_service.py        # OpenAI logic
+│   │   └── chat_service.py        # DeepSeek/OpenRouter integration
 │   └── main.py                    # FastAPI app entry point
 │
 ├── .env                           # Environment variables
-├── .gitignore
-├── requirements.txt              # Python dependencies
+├── requirements.txt               # Python dependencies
+├── test_chat.py                   # Local test script using requests
 ├── README.md
 ```
 
@@ -39,8 +39,9 @@ cd snapwear-ai-service
 
 ```bash
 python -m venv venv
-source venv/bin/activate         # macOS/Linux
-venv\Scripts\activate            # Windows
+venv\Scripts\activate        # Windows
+# OR
+source venv/bin/activate     # macOS/Linux
 ```
 
 ### 3. Install Dependencies
@@ -49,67 +50,84 @@ venv\Scripts\activate            # Windows
 pip install -r requirements.txt
 ```
 
-### 4. Configure Environment
+### 4. Environment Variables
 
-Create a `.env` file with your OpenAI API key:
+Create a `.env` file in the root:
 
+```env
+DEEPSEEK_API_KEY=your_openrouter_api_key
+DEEPSEEK_API_URL=https://openrouter.ai/api/v1/chat/completions
+SNAPWEAR_BACKEND_URL=http://localhost:5000
 ```
-OPENAI_API_KEY=your_openai_key_here
-```
+
+> Make sure your Snapwear backend is running on port `5000`.
 
 ---
 
-## 🚀 Run the Server
+## 🚀 Running the Server
 
 ```bash
-uvicorn main:app --reload --app-dir app
+uvicorn main:app --reload
 ```
 
-Visit:
-- Swagger Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
-- Chat Endpoint: `POST /api/v1/chat`
+- Swagger UI: [http://localhost:8000/docs](http://localhost:8000/docs)
+- Chat endpoint: `POST /api/v1/chat`
 
 ---
 
-## 🧪 Sample Chat API
+## 🧰 Test the AI Endpoint
 
-### Request
-`POST http://localhost:8000/api/v1/chat`
+### Using `test_chat.py`
 
-**Headers:**
-```http
-Content-Type: application/json
+```bash
+python test_chat.py
 ```
+
+### Using Postman
+
+**POST** `http://localhost:8000/api/v1/chat`
 
 **Body:**
+
 ```json
 {
-  "message": "Can you suggest a party outfit?"
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a helpful AI fashion assistant for Snapwear."
+    },
+    {
+      "role": "user",
+      "content": "What outfit should I wear to a summer party?"
+    }
+  ],
+  "model": "deepseek/deepseek-r1:free",
+  "temperature": 0.7,
+  "max_tokens": 400
 }
 ```
 
-### Response
-```json
-{
-  "reply": "Sure! Try a sleek black dress with silver heels and a clutch. Add a bold red lip!"
-}
-```
+---
+
+## 💡 Features
+
+- 🌟 **Real-time product recommendations** based on user queries
+- 🧠 Powered by DeepSeek via OpenRouter
+- 🧵 AI responses + Snapwear product links
+- 🧲 Swagger + test script for local validation
 
 ---
 
 ## 🧠 Built With
 
 - [FastAPI](https://fastapi.tiangolo.com/)
-- [OpenAI GPT-3.5](https://platform.openai.com/docs)
-
----
-
-## 💡 Tip
-
-You can test the API using Swagger at `/docs` or Postman. Make sure your `.env` is properly configured.
+- [DeepSeek R1 via OpenRouter](https://openrouter.ai)
+- [MongoDB](https://www.mongodb.com/) (Snapwear product catalog)
+- [httpx](https://www.python-httpx.org/) for async API calls
 
 ---
 
 ## 📬 Contact
 
-For help or issues, please contact the SnapWear dev team.
+For help, questions, or collaboration:
+**SnapWear Dev Team** — `dev@snapwear.com`
